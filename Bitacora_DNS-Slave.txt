@@ -1,0 +1,30 @@
+
+Actualizar repositorios
+
+apt update
+Instalar bind9
+
+apt install bind9 bind9utils bind9-doc
+Editar la configuración de bind9
+
+
+----- Definir las zonas e indicar que son de tipo slave. Una vez con esto. Cuando se reinicie el servicio automáticamente se sincronizará con el master ------
+
+
+vim /etc/bind/named.conf.local
+
+zone "digitaldefenders.net"{
+        type slave;
+        file "/var/cache/bind/db.digitaldefenders.net";
+        masters {192.168.106.145; }; # IP del NS1
+        allow-query { any; };
+};
+
+//zona inversa
+zone "106.168.192.in-addr.arpa"{
+        type slave;
+        file "/var/cache/bind/db.192.168.106";
+        masters {192.168.106.145; }; # IP del NS1
+        allow-query { any; };
+};
+
