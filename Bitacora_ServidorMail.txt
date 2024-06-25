@@ -1,7 +1,7 @@
  ------Configuración del servidor mail ------
-Con el nombre de dominio de tercer nivel seleccionado mail.nombre-de-dominio.com, el nombre de host será mail. Vamos a configurarlo.
+Con el nombre de dominio de tercer nivel seleccionado servmailSlave.digitaldefenders.net, el nombre de host será mail. Vamos a configurarlo.
 
-sudo hostnamectl set-hostname servMail-Slave
+sudo hostnamectl set-hostname servMailSlave
 
 
 
