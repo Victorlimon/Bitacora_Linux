@@ -1,0 +1,38 @@
+ ------Configuración del servidor mail ------
+Con el nombre de dominio de tercer nivel seleccionado mail.nombre-de-dominio.com, el nombre de host será mail. Vamos a configurarlo.
+
+sudo hostnamectl set-hostname servMail-Slave
+
+
+
+ ----------Instalación de postfix --------
+
+sudo apt install postfix mailutils
+
+------------------------------------------
+Durante la instalación, se le solicitarán opciones de forma interactiva. Establecer tipo de configuración del servidor de correo a Sitio de Internet.
+
+------------------------------------------
+Nombre del correo del sistema debe coincidir con el nombre de dominio para el que estamos configurando el servidor de correo. En nuestro caso, esto es digitaldefenders.net
+
+
+--------Backups de los archivos de configuracion de posfix------------
+
+sudo cp /etc/posfix/main.cf main.cf_backup
+sudo cp /etc/posfix/master.cf master.cf_backup
+
+
+-------- Configuración de los archivo main.cf u master.cf --------
+
+sudo nano /etc/postfix/main.cf
+ Descomentamos la linea...
+
+sudo nano /etc/postfix/master.cf
+
+
+------- nstalación de Dovecot IMAP y POP -------
+
+sudo apt-get install dovecot-imapd dovecot-pop3d
+
+
+
