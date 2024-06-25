@@ -1,0 +1,263 @@
+*************************** LISTA DE ASIGNACION DE IPS Y DOMINIOS **************************
+
+Linux Debian 12
+
+Aplicativo DNS Server ---> Bind9
+
+   Dominio  --->  vlimon.usfx.bo  ---> @  ---> SOA
+   Admin    --->  Root@vlimon.usfx.bo
+
+   Dominio  --->  tegnologos.org.bo   ---> @  ---> SOA
+   Admin    --->  Root@vlimon.usfx.bo
+
+
+
+
+----------------------------------------------------
+Diseño de IP: 172.28.135.64/28
+IPs de los SERVERS y sus Servicios
+
+   GW ---> 172.28.135.65
+   DHCP Server ---> 172.28.135.66 (DHCP Server)
+   DNS Server ---> 172.28.135.67 ( Igualmente es Rol de DHCP Server)
+   WEB Server ---> 172.28.135.68 (FTP/HTTP)
+   WEB Server ---> 172.28.135.69 (FTP/HTTP)
+   
+
+	IPs Dinamicos ---> 172.28.135.70 - 172.28.135.78 ( por DHCP Server )
+
+
+REGISTROS DNS  ----> A:
+
+ns1.vlimon.edu.bo   --->  172.28.135.67
+
+serverweb01.vlimon.edu.bo   --->  172.28.135.68
+websitelabdns.vlimon.edu.bo   --->  CNAME  --->  serverweb01.vlimon.edu.bo 
+
+serverweb.vlimon.edu.bo   --->  172.28.135.69
+www.vlimon.edu.bo   --->  CNAME  --->  serverweb.vlimon.edu.bo 
+
+*****************************************************************************************
+
+
+
+
+********************* ASIGNACION DE IP ESTATICAS AL SERVIDOR *****************************
+
+Configurar la propia interfaz enp0s8 si no está configurada
+
+sudo vi /etc/network/interfaces
+	auto enp0s8
+	iface enp0s8 inet static
+        	address 172.28.135.66
+        	netmask 255.255.255.240
+        	broadcast 172.25.135.79
+	
+	auto enp0s8:0
+	iface enp0s8:0 inet static
+        	address 172.28.135.67
+        	netmask 255.255.255.240
+        	broadcast 172.25.135.79
+
+sudo service networking restart  ---> Reiniciar el servicio
+
+
+********************************************************************************************
+
+
+
+
+************** NOTA *************
+los servicios de DHCP/DNS estan configurados para el laboratorio #10
+esta configurado de manera estatica y el DNS Dinamico no esta habilitado
+
+en la bitacora de DHCP/DNS esta configurado en modo dinamico.
+*********************************
+
+
+
+
+
+***************** INSTALACION Y CONFIGURACION DEL SERVIDOR DNS CON BIND9 *******************
+
+INSTALACIÓN BIND9
+sudo apt-get install bind9 dnsutils
+
+--------- Instalacion de DHCP-Server---------
+sudo apt-cache search isc-dhcp-server  
+sudo apt install isc-dhcp-server  
+
+
+
+*********** DNS DINAMICO (OPCIONAL) ************
+--------- GENERAR CLAVE ----------
+sudo touch ddns.key
+ddns-confgen -k DDNS_UPDATE
+
+------ pegar este texto o parecido --------
+key "DDNS_UPDATE" {
+        algorithm hmac-sha256;
+        secret "v7DAQBpvoRbVKoXYMrFHg0SEhYb022SKg9iLljO8pkc=";
+};
+
+ 
+--------- COPIAR CLAVE ----------
+cp ddns.key /etc/bind/
+cp ddns.key /etc/dhcp/
+
+------- CAMBIAR PROPIETARIOS -----
+chown root:bind /etc/bind/ddns.key
+chown root:root /etc/dhcp/ddns.key
+
+------ CAMBIAR PERMISOS --------
+chmod 640 /etc/bind/ddns.key
+chmod 640 /etc/dhcp/ddns.key
+
+#CONFIGURACIÓN DNS
+	nano /etc/bind/named.conf.local
+
+	include "/etc/bind/ddns.key";
+
+	zone "vlimon.edu.bo"{
+	type master;
+	notify no;
+	file "/var/cache/bind/db.vlimon.edu.bo";
+	allow-update { key DDNS_UPDATE; };
+	};
+
+	zone "135.28.172.in-addr.arpa"{
+	type master;
+	notify no;
+	file "/var/cache/bind/db.172.28.135";
+	allow-update { key DDNS_UPDATE; };
+	};
+
+*********** FINAL DNS DINAMICO **********
+
+
+
+
+----- CREAR DIRECTORIO ZONAS ---
+sudo mkdir /etc/bind/zonas/
+
+COPIAR DB.EMPTY
+sudo cp /etc/bind/db.local /etc/bind/zonas/db.vlimon.edu.bo
+sudo cp /etc/bind/db.local /etc/bind/zonas/db.172.28.135
+sudo cp /etc/bind/db.local /etc/bind/zonas/db.comunityhacker.edu.bo
+
+----- CONFIGURAR ZONA DIRECTA E INVERSA ----
+sudo nano /etc/bind/zonas/db.vlimon.edu.bo
+sudo nano /etc/bind/zonas/db.172.28.135
+sudo nano /etc/bind/zonas/db.comunityhacker.edu.bo
+
+------ COMPROBAR ERRORES DE SINTAXIS -----
+sudo named-checkzone vlimon.edu.bo /etc/bind/zonas/db.vlimon.edu.bo
+sudo named-checkzone 135.28.172.in-addr.arpa /etc/bind/zonas/db.172.28.135
+sudo named-checkzone comunityhacker.edu.bo /etc/bind/zonas/db.comunityhacker.edu.bo
+
+ ------ CREAR ENLACES SIMBÓLICOS -----
+cd /var/cache/bind
+
+sudo ln -s /etc/bind/zonas/db.vlimon.edu.bo .
+sudo ln -s /etc/bind/zonas/db.172.28.135 .
+sudo ln -s /etc/bind/zonas/db.comunityhacker.edu.bo .
+
+***********************************************************************************
+
+
+
+
+
+
+******************************* CONFIGURACIÓN DHCP SERVER ***************************
+
+
+
+sudo vi /etc/default/isc-dhcp-server  --> Preconfiguración de cual interfas utilizaremos
+	INTERFACESv4="enp0s8"
+
+
+
+Configuraciones básicas para el servicio dhcp
+
+sudo vi /etc/dhcp/dhcpd.conf
+
+	option domain-name "vlimon.edu.bo";
+	option domain-name-servers 172.28.135.67;
+	default-lease-time 32400;
+	max-lease-time 604800;
+
+
+
+       #*********** DNS DINAMIO ***************
+	ddns-update-style none;
+
+	#Configuración de Dynamic DNS (DDNS):
+	ddns-update-style interim;
+	ignore client-updates;
+	update-static-leases on;
+	ddns-domainname "vlimon.edu.bo.";
+	ddns-rev-domainname "in-addr.arpa.";
+
+
+	#CLAVE DDNS
+	include "/etc/dhcp/ddns.key";
+
+	#CONFIGURACIÓN LOG
+	log-facility local7;
+
+	#DHCP AUTORITARIO
+	authoritative;
+
+
+	#configuración de Zonas de DNS Dinámico:
+	zone vlimon.usfx.bo {
+        	primary 127.0.0.1;
+ 	        key DDNS_UPDATE;
+	}
+
+
+	zone 135.28.172.in-addr.arpa {
+	       primary 127.0.0.1;
+	       key DDNS_UPDATE;
+	}
+
+        *********** FINAL DNS DINAMICO **********
+
+
+	subnet 172.28.135.64 netmask 255.255.255.240 {
+  	  range 172.28.135.70 172.28.135.78;
+  	  option subnet-mask 255.255.255.240;
+ 	  option domain-name-servers 1.1.1.1 , 8.8.8.8;
+  	  option domain-name "vlimon.edu.bo";
+  	  option routers 172.28.135.65;
+ 	  option broadcast-address 172.28.135.79;
+ 	  default-lease-time 43200;
+  	  max-lease-time 43200;
+	}
+
+	host web-server {
+  	  hardware ethernet 08:00:27:7b:e1:a1;
+  	  server-name "serverweb.vlimon.usfx.bo";
+  	  fixed-address 172.28.135.67;
+	}
+
+	subnet 192.168.100.240 netmask 255.255.255.240 {
+  	   range 192.168.100.245 192.168.100.254;
+  	   option subnet-mask 255.255.255.240;
+	   #option domain-name-servers 172.;
+	   #option domain-name "vlimon.edu.bo";
+	   #option routers 192.168.100.1;
+  	   option broadcast-address 192.168.100.255;
+  	   default-lease-time 43200;
+  	   max-lease-time 43200;
+        }
+ 
+---- COMPROBAR DHCPD -----
+dhcpd -t
+
+Iniciemos el servicio y agréguelo al inicio
+
+sudo systemctl start isc-dhcp-server
+sudo systemctl status isc-dhcp-server
+
