@@ -1,0 +1,99 @@
+---------------------- REDIRECIONAMIENTO ---------------------
+Símbolo			Descripción
+>			Redirecciona stdout hacía un archivo. Lo crea si no existe, si existe lo sobreescribe.
+
+ls -l > lista.txt 	(La salida del comando se envía a un archivo en vez de la terminal.)
+
+>>			Redirecciona stdout hacía un archivo. Lo crea si no existe, si existe concatena la salida al final de este.
+			ps -ef >> procesos.txt  (Concatena al archivo procesos.txt la salida del comando.)
+
+<			Redirecciona stdin desde un archivo. El contenido de un archivo es la entrada o input del comando.
+			mail user < texto.txt   (El cuerpo del correo a enviar proviene desde un archivo, en vez del teclado).)
+
+2> - 2>>		Redirecciona stderr hacía un archivo. Crea (>) o concatena (>>) la salida de errores a un archivo. (ver ejemplos)
+
+1>&2			Redirecciona stdout hacía donde stderr apunte. (ver ejemplos)
+
+2>&1			Redirecciona stderr hacía donde stdout apunte. (ver ejemplos)
+
+   -----OTROS REDIRECCIONAMIENTOS QUE NO UTILIZAN FDs-----
+
+<<			Conocido como HERE-DOCUMENT o HereDoc (ver ejemplos)
+
+<<<			Conocido como HERE-STRING (ver ejemplos)
+
+|			El símbolo | (pipe) es un tipo de redireccionamiento ya que la salida (stdout) de un comando es la entrada (stdin) de otro.
+			ls /etc | grep services (La salida del comando a la izqueirda de | se convierte en la entrada del comando a la derecha.)
+
+			El comando tee redirecciona la salida (stdout) a ambos, un archivo y a la terminal.
+tee			ps -ef | tee procesos.txt (La salida de ps se muestra en la terminal y al mismo tiempo se redirecciona al archivo procesos.txt. 			Con la opción -a (tee -a) concatena al archivo.)
+
+--------------------------------------------------------------
+
+
+------------------------------- CONCATENAR Y FILTRAR TEXTO ------------------------------
+
+
+join:  unir líneas de dos archivos en un campo común
+
+-j   equivalente a '-1 CAMPO -2 CAMPO'
+-i   ignorar las diferencias en caso de que se comparen campos
+-t   use CHAR como separador de campos de entrada y salida
+
+join {opcion} {archivo1} {archivo2}
+join uno.txt dos.txt
+join -1 3 uno dos
+join -t":" uno dos
+join -t":" -1 2 -2 2 uno dos
+
+
+paste:   fusionar líneas de archivos
+
+-d   reutilizar caracteres de LIST en lugar de TAB
+
+paste -d":" file1.txt file2.txt file3.txt
+paste file1.txt file2.txt file3.txt
+paste -d ':|' file1.txt file2.txt file3.txt
+
+cut: eliminar secciones de cada línea de archivos
+
+-d   use DELIM en lugar de TAB para delimitador de campo
+-f   seleccione sólo estos campos; también imprima cualquier línea que no contiene ningún carácter delimitador, a menos que la opción -s esté especificado                    
+-s   no imprima líneas que no contengan delimitadores
+-c   seleccione solo estos personajes
+
+-------------------------------------------------------------------------------------------
+
+
+
+-------------------------- ADMINISTRACION SUDO ---------------------
+
+sudo --> Ejecuta tu comando con permisos administrativos o de root.
+su  --> te permite ejecutar un programa en el shell de Linux como un usuario diferente.
+
+--------------------------------------------------------------------
+
+
+------------------ADMINISTRACION DE ARCHIVOS ------------------
+
+cat  ---> concatena archivos e imprime en la salida estándar
+mkdir  ----> crear directorios
+rm  ---> eliminar archivos o directorios
+cp  ---> copiar archivos o direcrotios
+mv  ---> mover archivos o directorios
+find --->
+cd  ---> cambia el directorio de trabajo
+pwd  ---> imprime el nombre del directorio actual/de trabajo
+touch  --> crear archivos 
+
+tail [opcion] [archivo] ---> genera la última parte de los archivos
+	-n Mostrar las ultimas n lineas de un archivo
+	-c mostrara los ultimos bytes de un archivo
+	-f Mostrar las ultimas lineas que se añaden a un archivo en tiempo real
+
+head ---> genera la primera parte de los archivos
+awk  ---> lenguaje de procesamiento y escaneo de patrones
+sed  ---> 
+
+
+---------------------------------------------------------------

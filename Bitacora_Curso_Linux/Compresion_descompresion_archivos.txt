@@ -1,0 +1,27 @@
+---------------- COMPRESION Y COPIAS DE SEGURIDAD(BACKUP) DE ARCHIVOS ----------------
+
+7z: un archivador de archivos con la mayor relación de compresión
+bzip2, bunzip2: un compresor de archivos con clasificación de bloques
+gzip, gunzip, zcat: comprime o expande archivos
+                 ----------------------------------------------------
+
+tar.-  guarda muchos archivos juntos en una sola cinta o disco y puede restaurar archivos individuales desde el archivo.
+
+-x extraer archivos de un archivo
+-v enumerar detalladamente los archivos procesados
+-z filtrar el archivo a través de gzip   gz
+-j filtrar el archivo a través de bzip2  bz2
+-f utilizar archivo de almacenamiento o dispositivo ARCHIVO
+-c crear un nuevo archivo
+-t enumerar el contenido de un archivo
+-r agregar archivos al final de un archivo
+
+
+tar -cvf LinuxConfig_Backup.tar LinuxConfig
+tar -xvf LinuxConfig_Backup.tar LinuxConfig
+tar -rvf {LinuxConfig_Backup.tar} {Nuevo archivo a insertar}
+tar -tvf {LinuxConfig_Backup.tar}
+tar -zcvf LinuxConfig_Backup.tar LinuxConfig
+tar -jcvf LinuxConfig_Backup.tar LinuxConfig
+------------------------------------------------------------------------------------
+

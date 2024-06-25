@@ -1,0 +1,78 @@
+id  ---> Muestra información de identificación de una cuenta de usuario
+
+useradd  --> Permite crear un usuario nuevo en el sistema..
+	CAMPOS CONTENIDOS
+	-u Define un uid único para el usuario.
+	-g Define el grupo primario al que va a pertenecer el usuario.
+	-G, --groups GRUPOS: Define una lista de grupos adicionales a los que pertenecerá el usuario, 	      separados por comas.
+	-d Define el path absoluto para el home del usuario.
+	-m Fuerza la creación del home del usuario si no existe.
+	-s Define la shell para el usuario, por defecto asigna /bin/sh
+	-e Fecha de expiración de la cuenta.
+	-f Tiempo máximo admitido de inactividad para la cuenta.
+	-c da una descripcion al usuario que se esta creando
+
+sudo useradd -u 1001 -G sudo,adm -m -d /home/sysadmin -s /bin/bash -c "administrador del sistema" -e 2024-12-31 -f 30 sysadmin
+
+sudo passwd sysadmin       ---> darle una contraseña al usuario
+getent passwd sysadmin  -->   Verificar el comentario
+
+
+
+usermod  -->
+	Parametros Referencia
+	-m Mueve el home del usuario
+	-l Cambio del nombre de inicio de sesión
+	-f Définimos el número de días puede estar inactiva.
+	-e Define la fecha de caducidad de la cuenta
+
+
+
+
+userdel ---> elimina un usuario del sistema
+passwd  ---> Cambia la contraseña de una cuenta de usuario
+groupadd  ---> Añade un grupo al sistema
+
+groupdel   ---> Elimina un grupo del sistema
+groupmod  --> modifica grupo del sistema
+chmod u+x;g-r;o+x [archivo]  --->  modifica los permisos de directorios o archivos en Linux.
+chown  ---> te permite cambiar la propiedad de un archivo, directorio o enlace simbólico al nombre de usuario especificado.
+chgrp 
+
+LiMA$%749@ne?--**74##
+
+
+
+
+
+
+# Crear los grupos si no existen
+sudo groupadd tecnologos
+sudo groupadd admin
+sudo groupadd sudo
+sudo groupadd users
+
+# Crear la cuenta de usuario con los atributos especificados
+sudo useradd -m -c "Estudiante de la facultad de Ciencias y tecnología." -d /home/servicios/tecno1 -g tecnólogos -G admin,sudo,users linuxero
+
+# Establecer la contraseña del usuario
+sudo passwd linuxero
+
+# Configurar la expiración de la cuenta
+sudo chage -E 2024-12-31 linuxero
+
+# Configurar la expiración de la contraseña
+sudo chage -M 30 linuxero
+
+# Verificar la configuración de la cuenta
+sudo chage -l linuxero
+getent passwd linuxero
+
+# Iniciar sesión con la cuenta creada y verificar los grupos
+su - linuxero
+groups
+
+
+contraseña=linuxero123$&
+
+

@@ -1,0 +1,40 @@
+dmidecode --->  El comando dmidecode es capaz de leer y mostrar la información del SMBIOS y para ver los dispositivos conectados directamente a la tarjeta madre.
+
+free -m  --> Para ver la cantidad de la RAM en tu sistema, incluyendo la RAM virtual.
+
+lspci  ---> Para ver todos los dispositivos conectados por un bus PCI.
+
+lsusb  ---> Para mostrar los dispositivos conectados al sistema vía USB.
+
+lshal ---> te permite ver los dispositivos detectados por HAL. Este comando produce una gran cantidad de salidas.
+
+
+ los comandos "fdisk", "cfdisk" y "sfdisk" son herramientas para trabajar con las particiones discos MBR.
+
+Las herramientas para gestionar los discos GPT se llaman de manera similar a las contrapartes de "fdisk": "gdisk", "cgdisk" y "sgdisk".
+
+También existe una familia de herramientas que intenta apoyar ambos tipos de disco MBR y GPT. Este conjunto de herramientas incluye al comando "parted" y la herramienta gráfica "gparted".
+
+
+
+Las unidades de disco duro están asociadas a los nombres de archivos (llamados archivos de dispositivo) que se almacenan en el directorio /dev. Diferentes tipos de unidades de disco duros reciben nombres ligeramente diferentes: hd para los discos duros IDE (Intelligent Drive Electronics o «Unidad Electrónica Inteligente» en español) y sd para USB, SATA (Serial Advanced Technology Attachment o «Aditamento de Tecnología Serial Avanzada» en español) y los discos duros SCSI (Small Computer System Interface o «Interfaz Estándar de Equipos Pequeños» en español).
+
+A cada disco se le asigna una letra, por ejemplo, el primer disco duro IDE tendría un nombre de archivo de dispositivo /dev/hda y el segundo disco duro IDE se asociaría al archivo de dispositivo /dev/hdb.
+
+Las particiones reciben números únicos para cada dispositivo. Por ejemplo, si un disco duro USB tenía dos particiones, éstas pueden asociarse a los archivos de dispositivo /dev/sda1 y /dev/sda2.
+
+En la salida siguiente puedes ver que este sistema tiene tres dispositivos sd: /dev/sda, /dev/sdb y /dev/sdc. También puedes ver que hay dos particiones en el primer dispositivo (como lo demuestran los archivos /dev/sda1 y /dev/sda2) y una partición en el segundo dispositivo (según lo visualiza el archivo /dev/sdb1):
+
+ls /dev/sd*
+
+En el ejemplo siguiente se utiliza el comando fdisk para mostrar la información de la partición en el primer dispositivo de sd.
+
+fdisk -l /dev/sda
+
+
+
+
+
+
+eject
+

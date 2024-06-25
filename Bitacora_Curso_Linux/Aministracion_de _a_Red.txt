@@ -1,0 +1,201 @@
+----------------- PUERTOS COMUNES CORRIENDO UN SERVICIO -----------------
+
+puerto           servicio
+
+445              samba (smbd)
+80               apache (http)
+443                       (https)
+21               (ftp)
+
+3306             (msql)
+5432             (postgreSQL)
+23               (telnet)
+53               (DNS)
+67               (DHCP)
+
+
+existen dos tipo de puertos
+    * Puertos UDP
+    * Puertos TCP
+
+-------------------------------------------------------------------------
+
+
+----------------------------------- GESTION DE PAQUETES -----------------------------------
+
+/etc/apt/source.list   ---> archivo de configuracion de descargas
+
+apt-get [opciones] (comando) ---> Este comando de Linux te permite gestionar, actualizar, eliminar e instalar software, incluidas sus dependencias.
+
+Órdenes más utilizadas:
+  list - lista los paquetes según los nombres
+  search - busca en las descripciones de los paquetes
+  show - muestra detalles del paquete
+  install - instala paquetes
+  reinstall - reinstall packages
+  remove - elimina paquetes
+  autoremove - Elimina automáticamente todos los paquetes sin utilizar
+  update - actualiza la lista de paquetes disponibles
+  upgrade - actualiza el sistema instalando/actualizando paquetes
+  full-upgrade - actualiza el sistema eliminando/instalando/actualizando paquetes
+  edit-sources - edita el fichero de información de fuentes
+  satisfy - satisfy dependency strings
+
+
+apt-get update  ---> actualizar los repositorios de Linux
+apt-get upgrade ---> actualizarán todos los paquetes y sus dependencias.
+apt-get install [nombre-paquete] --> Instalar / actualizar un paquete deb.
+
+apt remove [nombre-pquete]   --> Eliminar un paquete deb del sistema 
+apt purgue [nombre-paquete]  --> desinstalar las aplicaciones apt y eliminar sus archivos de configuración ubicados en /etc.
+dpkg       --> administrar paquetes localmente
+apt        --> administrador de paquetes desde los servidores
+wget --> para descargar archivos de Internet mediante los protocolos HTTP, HTTPS o FTP. 
+git clone
+
+----------------------------------------------------------------------------
+
+
+
+------------------- SEVICIOS DE RED ----------------------
+
+sudo systemctl list-unit-file --type service --all
+       todos los servicios que estan activos en nuestro servidor 
+
+sudo apt install netstat-net
+sudo netstat -plnt    -> monitoreo de los servicios y en que puertos estan corriendo
+
+lsof -l:[puerto]  -> puedes ver que servicio esta conrriendo en el puerto
+
+ss ---> ver todas las coneciones de los sockets
+
+----------------------------------------------------------
+
+
+
+---------------------------  DIRECION IP ESTATICA  -------------------------------
+
+------------------- DEBIAN SERVER --------------
+
+sudo nano /etc/network/interfaces
+
+
+# Static IP address
+auto eth0
+iface eth0 inet static
+        address 192.168.1.100
+        netmask 255.255.255.0
+        network 192.168.1.0
+        broadcast 192.168.1.255
+        gateway 192.168.1.1
+
+
+systemctl status networking 
+systemctl restart networking 
+ifdown eth0
+ifup eth0
+
+
+
+
+------------------- UBUNTU SERVER ----------------------
+
+sudo nano /etc/netplan/00-installer-config.yaml
+
+# Static IP address
+
+network:
+  renderer: networkd
+  ethernets:
+    enp0s3:
+       dhcp4: false
+       addresses :
+         - 192.168.100.98/24  
+       nameservers:
+         addresses: [1.1.1.1, 8.8.8.8]
+       routes:
+         - to: default
+           via: 192.168.100.1  ---> gateway
+  version: 2
+
+sudo netplan apply
+
+--------------------------------------------------------------------------------------
+
+
+
+-------------------------------- GESTION DE PROCESOS ---------------------------------
+
+ps: informe una instantánea de los procesos actuales.
+
+-e      Selecciona todos los procesos.
+-f      Hacer listado en formato completo.
+
+ps -ef
+
+ps -e | grep firefox  ---->   PID    TTY    TIME        CMD
+			      1234    ?    00:00:01    firefox-esr
+
+
+kill: terminar un proceso
+
+kill PID   ===>   kill 1234
+
+-----------------------------------------------------------------------------------------
+
+
+--------------------------- COMANDO IP -----------------------------------------
+sudo ip address add 192.168.1.100/24 dev eth0
+
+ip link show
+
+ip route add dirGW dev tarjeta_de_red / IP
+
+ip route ls
+------------------------------------------------------------------------------
+
+
+
+--------- agrando do ips a una sola tarjeta de red -----------------
+
+auto ens34:1
+iface ens34 inet static
+address IP
+netmask [Mask]
+
+---------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------
+
+sudo systemctl list-unit-file --type service --all
+       todos los servicios que estan activos en nuestro servidor 
+
+ping 
+traceroute
+
+sudo apt install netstat-net
+sudo netstat -plnt    -> monitoreo de los servicios y en que puertos estan corriendo
+whois
+nmap
+hostname
+tcpdump
+
+lsof -l:[puerto]  -> puedes ver que servicio esta conrriendo en el puerto
+
+daemon ---> proceso padre  ---> systemd;inittab
+top    --->
+whois   ---> 
+hostname   -->
+vmstat  ---> 
+tcpdump ---> 
+netstat ----> 
+iostat ----> 
+iotop   --->
+ifconfig   -->  instalar el paquete net-tools con  --> sudo apt install net-tools
+ip a   -->
+service --> 
+ps -e --->
+
+ss ---> ver todas las coneciones de los sockets
+
+--------------------------------------------------------------------------------------------

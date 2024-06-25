@@ -1,0 +1,109 @@
+El comando find de Linux es una herramienta precisa para encontrar archivos y directorios y es compatible con casi todas las distribuciones de Linux.
+
+
+find <directory_path> <search_parameter>
+
+--------------------------------------------------------------------------
+Parámetro de búsqueda 			Explicación
+-name, -iname				Filtrar por nombre de archivo
+-type					Filtrar por tipo de archivo
+-size, -empty				Filtrar por tamaño de archivo
+-ctime, -mtime, -atime			Filtrar por marca de tiempo
+-user, -group				Filtrar por propietario y grupo
+-perm					Filtrar por derechos de archivo
+----------------------------------------------------------------------------
+Parámetro de búsqueda 			Explicación
+-and					Los resultados de la búsqueda deben cumplir ambas condiciones
+-or					Los resultados de la búsqueda deben cumplir al menos una de las dos condiciones
+-not					Negar la condición posterior
+-------------------------------------------------------------------------------------
+Tipo de archivo				Explicación
+f					Archivo
+d					Directorio
+l					Enlace
+------------------------------------------------------------------------------------
+Unidades				Explicación
+c					Bytes
+k					Kilobytes
+M					Megabytes
+G					Gigabytes
+b					512-byte bloques
+------------------------------------------------------------------------------------
+Parámetro de búsqueda			Explicación
+-user					Filtrar por propietario
+-group					Filtrar por grupo
+-perm					Filtrar por derechos de acceso
+
+------------------------ EJEMPLOS DE USO DE FIND -------------------------------------
+Buscar el archivo cmdline:
+find /proc -name "cmdline" 2>/dev/null
+
+Desplegar el primer proceso que se ejecuta al iniciar Linux:
+ps -p 1
+
+Ejecutar procesos de prueba en segundo plano:
+ping localhost > /dev/null &
+sleep 888888 &
+
+Listar todos los procesos en ejecución:
+ps aux
+
+ps aux | grep ping
+ps aux | grep sleep
+
+Matar y detener procesos:
+pkill ping
+pkill -STOP sleep
+
+Verificar tareas con jobs:
+jobs
+
+Mostrar las dos últimas líneas de auth.log:
+tail -n 2 /var/log/auth.log
+
+Finalidad del archivo syslog:
+El archivo syslog en /var/log/syslog captura mensajes del sistema, incluyendo eventos del kernel, servicios del sistema y otros mensajes generales. Su propósito es proporcionar una pista de auditoría y un recurso de diagnóstico para administradores del sistema, permitiendo monitorear la salud y la actividad del sistema.
+
+
+
+
+
+------------------------------ COMANDO GREP -------------------------------
+------ grep----
+grep <opcion> <patron> <argumento>
+	-f  --> como patron pondras un archivo que contenga los patrones a aplicar
+	-c  --> Muestra la cantidad de ocurrencias del patrón en el archivo
+	-E  --> Interpreta los PATRONES como expresiones regulares extendidas
+	-v  --> Invertir el sentido de coincidencia
+	-i  --> Ignorar las mayusculas y minusculas
+	-n  --> Lista el numero de linea coincidentes en un archivo
+	-A  --> Muestra debajo de las lineas coincidentes
+	-B  --> Muestra arriba de las lineas coincidentes
+	-o  --> Muestra solo el texto coincidente de cada linea
+	-x  --> El argumento tiene que tener coincidencia con toda la linea
+
+grep -E '<hola>|<mundo>' --> muestra lalinea que tenga 
+grep -E 'hola.*mundo'
+---------------------------------------------------------------------------
+
+
+
+------------------ EXPRECIONES REGULARES ----------------------
+
+------ patrones basicos -----
+
+.*  -->(punto asterisco) para representar múltiples caracteres.
+
+.   -->(punto) para representar un caracter.
+
+[a, e, i, o, u]  --> para representar algunos caracteres (no incluye las comas) [EXPRECIONES DE CORCHETE]
+
+[A-z]   -->para presentar un rango de caracteres.  [EXPRECIONES DE CORCHETE]
+
+^    -->para representar el inicio de una línea (registro que se encuentra en el inicio de una línea). [EXPRECIONES ANCLA]
+
+$    -->para representar el fin de línea (registro que se encuentra al final de una línea). [EXPRECIONES ANCLA]
+
+-----------------------------
+
+sort <opciones> <archivo> ---> ordenar líneas de texto en orden alfabético o numérico.
